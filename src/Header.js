@@ -1,7 +1,7 @@
 export default Header;
 
-function Header() {
+function Header(props) {
     return (
-        <div>Header</div>
+        <div>{props.connectedDB.toString()}</div>
     );
 }

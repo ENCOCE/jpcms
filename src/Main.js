@@ -1,6 +1,6 @@
 export default Main;
 
-function Main() {
+function Main(props) {
     return (
         <div>Main</div>
     );
