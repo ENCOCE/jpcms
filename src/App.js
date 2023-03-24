@@ -1,24 +1,39 @@
 import './App.css';
-// import Header from './Header';
-// import Main from './Main';
-// import Footer from './Footer';
-import { useState } from 'react';
-import axios from "axios";
+import Header from './Header';
+import Main from './Main';
+import Footer from './Footer';
+
+import * as XLSX from 'xlsx';
 
 export default App;
 
+async function openExcel(e) {
+  e.preventDefault();
+
+        console.log('reading input file:');
+
+        const file = e.target.files[0];
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data);
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1,
+            defval: "",
+        });
+      
+        //console.log(e.target.files[0]);
+        //console.log(workbook);
+        console.log(jsonData);   
+}
+
 function App() {
-  // let [connectedDB, setConnectedDB] = useState(false); 
-    
   return (
     <div>
-      <Company></Company>
+      <input type="file" onInput={(e) => openExcel(e)}/>
 
-      {/* <Header connectedDB={connectedDB} />
-      <Main connectedDB={connectedDB} />
-      <Footer /> */}
-
-      
+      <Header />
+      <Main />
+      <Footer />
 
       {/* <input type="button" value="read" onClick={() => {
         //  axios.get("http://10.200.140.141:3001/read?table=company")
@@ -42,24 +57,5 @@ function App() {
       }} /> */}
 
     </div>
-  );
-}
-
-function Company() {
-  let [content, setContent] = useState();
-
-  axios.get('http://10.200.140.141:3001/read?table=company')
-    .then((response) => {
-      if (content === response.data[0].number)
-        return;
-
-      console.log(response.data[0].number);
-      setContent(response.data[0].number);
-    }).catch((err) => {
-      console.log(err);
-    });
-
-  return (
-    <div>{content}</div>
   );
 }

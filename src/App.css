@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+table {
+  border: 0px solid black;
+}
+
+th {
+  border: 0px solid black;
+  background: black;
+  color: white;
+  text-align: center;
+  min-width: 200px;
+}
+
+td {
+  border: 1px solid black;
+  background: white;
+  color: black;
+  text-align: center;  
+}
