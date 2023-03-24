@@ -29,7 +29,7 @@ async function openExcel(e) {
 function App() {
   return (
     <div>
-      <input type="file" onInput={(e) => openExcel(e)}/>
+      <input type="file" onInput={(e) => openExcel(e)}/>  
 
       <Header />
       <Main />
