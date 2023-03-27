@@ -1,11 +1,11 @@
 const express = require("express");
-const cors    = require("cors");
-const db      = require("mariadb");
-const exp     = express();
-const port    = 3001;
+const cors = require("cors");
+const db = require("mariadb");
+const exp = express();
+const port = 3001;
 
 const pool = db.createPool({
-    host: "10.200.140.141",
+    host: "10.200.140.149",
     port: 3306,
     user: "guest",
     password: "1001",
@@ -19,7 +19,7 @@ exp.use(cors({
 }))
 
 // post 요청 시 값을 객체로 바꿔줌
-exp.use(express.urlencoded({ extended: true })) 
+exp.use(express.urlencoded({ extended: true }))
 
 // 서버 연결 시 발생
 exp.listen(port, () => {

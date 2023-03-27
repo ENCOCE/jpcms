@@ -3,34 +3,11 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 
-import * as XLSX from 'xlsx';
-
 export default App;
-
-async function openExcel(e) {
-  e.preventDefault();
-
-        console.log('reading input file:');
-
-        const file = e.target.files[0];
-        const data = await file.arrayBuffer();
-        const workbook = XLSX.read(data);
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-            header: 1,
-            defval: "",
-        });
-      
-        //console.log(e.target.files[0]);
-        //console.log(workbook);
-        console.log(jsonData);   
-}
 
 function App() {
   return (
-    <div>
-      <input type="file" onInput={(e) => openExcel(e)}/>  
-
+    <>
       <Header />
       <Main />
       <Footer />
@@ -56,6 +33,6 @@ function App() {
           })
       }} /> */}
 
-    </div>
+    </>
   );
 }

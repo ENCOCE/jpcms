@@ -1,40 +1,37 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header {
+  background-color: #282c34;  
+  height: 50px;
   display: flex;
-  flex-direction: column;
+  position: sticky;
+  top: 0;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  /* justify-content: right; */
+
+  justify-content: space-between;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.header > ul {
+  list-style-type: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.header > ul > li {
+  display: inline-block;
+}
+
+.footer {
+  background-color: red;
+  width: 100%;
+  height: 50px;
+  /* display: flex; */
+  position: absolute;
+  bottom: 0;
+  /* align-items: center; */
+}
+
+button {
+  padding: 5px;
+  margin: 10px;
 }
 
 table {
@@ -54,4 +51,65 @@ td {
   background: white;
   color: black;
   text-align: center;  
+}
+
+.label-button {
+  display: inline-block;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  display: none;
+}
+
+
+
+
+.grid-frame {
+  display: grid;
+  grid-gap: 0px;
+  grid-template-columns: 30% 30% 40%;
+  background-color: #fff;
+  color: #444;
+  /* min-height: 100vh; */
+}
+
+.box {
+  background-color: #444;
+  color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 150%;
+
+}
+
+.a {
+  grid-column: 1 / 3;
+  grid-row: 1;
+}
+
+.b {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+
+.c {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.d {
+  grid-column: 2;
+  grid-row: 2;
 }
