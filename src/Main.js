@@ -6,18 +6,14 @@ export default Main;
 
 function Main(props) {
   return (
-    // <div>
-    //   <Table tableName="company" />
-    //   <Table tableName="business" />
-    //   <Table tableName="mri" />
-    //   <Table tableName="keyword" />
-    // </div>
-    <div class="grid-frame">
-      <div class="box a">A</div>
-      <div class="box b">B</div>
-      <div class="box c">C</div>
-      <div class="box d">D</div>
-    </div>
+    <>
+      <div className="grid-container">
+        <div className="grid-cell cell-a"><Table tableName="company" /></div>
+        <div className="grid-cell cell-b"><Table tableName="business" /></div>
+        <div className="grid-cell cell-c"><Table tableName="mri" /></div>
+        <div className="grid-cell cell-d"><Table tableName="keyword" /></div>
+      </div>
+    </>
   );
 }
 
@@ -25,9 +21,12 @@ function Table(props) {
   let [list, setList] = useState(null);
   let columns, rows;
 
-  const fileBtn = useRef();
+  const uploadRef = useRef();
+  const downloadRef = useRef();
 
   if (list === null) {
+    console.log('OK');
+
     axios.get(`http://10.200.140.149:3001/read?table=${props.tableName}`)
       .then((response) => {
         if (list !== response.data && response.data.length > 0) {
@@ -52,13 +51,39 @@ function Table(props) {
 
   return (
     <>
-      <div>
-        {/* <label class="label-button" htmlFor="open-file">
-          <div>OPEN</div> 
-        </label> */}
-        <input id="open-file" type="file" accept=".xlsx, .xls" ref={fileBtn} onInput={(e) => openExcel(e)} 
-          onClick={(e) => { console.log(fileBtn); }}/>
-        <button onClick={() => {fileBtn.current.click();}}>OPEN</button>
+      <div className="table-title">{props.tableName.toUpperCase()}</div>
+      <div className="table-buttons">      
+        <ul>
+          <li>
+            <div>
+              <input type="file" accept=".xlsx, .xls" ref={uploadRef} onInput={(e) => {
+                openExcel(e)
+                .then((data) => {
+                  const array = data[0].map((value, index) => { return value; });
+
+                  axios.post(`http://10.200.140.149:3001/insert?table=${props.tableName}`, array)
+                    .then((response) => {
+                      console.log(response);
+
+                      setList(null);
+                    }).catch((err) => {
+                      console.log(err);
+                    });
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              }} />
+              <button onClick={() => { uploadRef.current.click(); }}>Upload</button>
+            </div>
+          </li>
+          <li>
+            <div>
+              <input type="file" accept=".xlsx, .xls" ref={downloadRef} onInput={(e) => openExcel(e)} />
+              <button onClick={() => { downloadRef.current.click(); }}>Download</button>
+            </div>
+          </li>
+        </ul>
       </div>
 
       <div>
@@ -80,18 +105,14 @@ function Table(props) {
 async function openExcel(e) {
   e.preventDefault();
 
-        console.log('reading input file:');
+  const file = e.target.files[0];
+  const data = await file.arrayBuffer();
+  const workbook = XLSX.read(data);
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+    header: 1,
+    defval: "",
+  });
 
-        const file = e.target.files[0];
-        const data = await file.arrayBuffer();
-        const workbook = XLSX.read(data);
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-            header: 1,
-            defval: "",
-        });
-      
-        //console.log(e.target.files[0]);
-        //console.log(workbook);
-        console.log(jsonData);
+  return jsonData;
 }

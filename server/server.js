@@ -39,7 +39,7 @@ exp.get("/read", (request, response) => {
         } catch (e) {
             result = e;
         } finally {
-            conn?.release();
+            conn.release();
 
             response.send(result);
         }
@@ -53,9 +53,11 @@ exp.post("/insert", (request, response) => {
         let conn, result;
         try {
             conn = await pool.getConnection();
-            result = await conn.query(
-                { namedPlaceholders: true, sql: 'INSERT INTO COMPANY VALUES (:number, :name, :type, :item, :key, :date, :note)' }, request.body
-            );
+            // result = await conn.query(
+            //     { namedPlaceholders: true, sql: 'INSERT INTO COMPANY VALUES (:number, :name, :type, :item, :key, :date, :note)' },
+            //     request.body
+            // );
+            result = await conn.query(`INSERT INTO ${request.query.table} VALUES (?)`, [request.body]);
         }
         catch (e) {
             result = e;
