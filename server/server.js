@@ -48,7 +48,7 @@ exp.get("/read", (request, response) => {
 
 exp.post("/insert", (request, response) => {
     response.header("Access-Control-Allow-Origin", "*");
-
+    
     (async () => {
         let conn, result;
         try {
@@ -57,7 +57,16 @@ exp.post("/insert", (request, response) => {
             //     { namedPlaceholders: true, sql: 'INSERT INTO COMPANY VALUES (:number, :name, :type, :item, :key, :date, :note)' },
             //     request.body
             // );
-            result = await conn.query(`INSERT INTO ${request.query.table} VALUES (?)`, [request.body]);
+            let jsonData = request.body;
+
+            // let arrayData = jsonData[0].map((value, key) => { return value; });
+            // result = await conn.query(`INSERT INTO ${request.query.table} VALUES (?)`, arrayData);
+
+            for (let i = 0; i < jsonData.length; i++) {
+                // let rowData = Object.values(jsonData[i]).map((value, index) => { return value; });
+                // result = await conn.query(`INSERT INTO ${request.query.table} VALUES (?)`, [rowData]);
+                result = await conn.query(`INSERT INTO ${request.query.table} VALUES (?)`, [jsonData[i]]);
+            }
         }
         catch (e) {
             result = e;

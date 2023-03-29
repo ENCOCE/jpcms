@@ -19,18 +19,18 @@ function Main(props) {
 
 function Table(props) {
   let [list, setList] = useState(null);
-  let columns, rows;
+  let columns = null;
+  let rows = null;
 
   const uploadRef = useRef();
   const downloadRef = useRef();
 
+  if (list === 0) list = null;
   if (list === null) {
-    console.log('OK');
-
     axios.get(`http://10.200.140.149:3001/read?table=${props.tableName}`)
       .then((response) => {
         if (list !== response.data && response.data.length > 0) {
-          setList(response.data);
+            setList(response.data);
         }
       }).catch((err) => {
         console.log(err);
@@ -58,14 +58,10 @@ function Table(props) {
             <div>
               <input type="file" accept=".xlsx, .xls" ref={uploadRef} onInput={(e) => {
                 openExcel(e)
-                .then((data) => {
-                  const array = data[0].map((value, index) => { return value; });
-
-                  axios.post(`http://10.200.140.149:3001/insert?table=${props.tableName}`, array)
+                .then((jsonData) => {
+                  axios.post(`http://10.200.140.149:3001/insert?table=${props.tableName}`, jsonData)
                     .then((response) => {
-                      console.log(response);
-
-                      setList(null);
+                      setList(0);
                     }).catch((err) => {
                       console.log(err);
                     });
@@ -103,8 +99,6 @@ function Table(props) {
 }
 
 async function openExcel(e) {
-  e.preventDefault();
-
   const file = e.target.files[0];
   const data = await file.arrayBuffer();
   const workbook = XLSX.read(data);
