@@ -61,6 +61,7 @@ button {
 table {
   border: 0px solid black;
   width: 100%;
+  font-size: 0.8em;
 }
 
 th {
@@ -74,7 +75,8 @@ td {
   border: 1px solid black;
   background: white;
   color: black;
-  text-align: center;
+  text-align: left;
+  height:18px;
 }
 
 .label-button {
