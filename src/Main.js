@@ -20,10 +20,17 @@ function Main(props) {
 }
 
 function Table(props) {
+  let countInfo = null;
   let insertBtn = null;
   let [list, setList] = useState(null);
   let columns = null;
   let rows = [];
+  let pages = [];
+
+  let [rowsTotalCount, setRowsTotalCount] = useState(0);
+  let rowsCount = 0;  
+  let pagesTotalCount = 0;
+  let currentPageNo = 1;
 
   const columnNames = {
     company: ["NUMBER", "NAME", "TYPE", "ITEM", "KEY", "DATE", "NOTE"],
@@ -31,11 +38,12 @@ function Table(props) {
     mri: ["NUMBER", "MRI"],
     keyword: ["KEYWORD", "KEY"]
   };
-  const rowNums = { company: 30, business: 12, mri: 12, keyword: 12 };
+  const rowsMaxCounts = { company: 29, business: 11, mri: 11, keyword: 11 };
+  const pageCounts = { company: 20, business: 10, mri: 5, keyword: 5 };
 
   const uploadRef = useRef();
   const insertRef = useRef();
-
+ 
   if (props.tableName !== "company") {
     insertBtn =
       <div>
@@ -57,44 +65,73 @@ function Table(props) {
         <button onClick={() => { insertRef.current.click(); }}>Insert</button>
       </div>
   }
-
+  
   if (list === 0) list = null;
   if (list === null) {
     document.body.style.cursor = "wait";
 
-    axios.get(`http://${serverAddress}/read?table=${props.tableName}&count=${rowNums[props.tableName]}`)
+    axios.get(`http://${serverAddress}/read?table=${props.tableName}
+               &offset=${rowsMaxCounts[props.tableName] * (currentPageNo - 1)}
+               &count=${rowsMaxCounts[props.tableName]}`)
       .then((response) => {
         if (list !== response.data && response.data.length > 0) {
           setList(response.data);
         }
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
       });
 
-      document.body.style.cursor = "default";
+    axios.get(`http://${serverAddress}/count?table=${props.tableName}`)
+      .then((response) => {
+        setRowsTotalCount(Number(response.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    document.body.style.cursor = "default";
   }
-  
+
   columns = columnNames[props.tableName].map((value, index) => {
     return <th key={index}>{value}</th>
   });
 
   if (list !== null) {
-    for (let i = 0; i < list.length; i++) {
+    rowsCount = list.length;
+
+    for (let i = 0; i < rowsCount; i++) {
       let tds = Object.values(list[i]).map((value, index) => { return <td key={index}>{value}</td> });
       rows.push(<tr key={i}>{tds}</tr>);
     }
   }
 
-  let diff = rowNums[props.tableName] - rows.length;
-  for (let i = 0; i < diff; i++) {
+  let rowsCountDiff = rowsMaxCounts[props.tableName] - rowsCount;
+  for (let i = 0; i < rowsCountDiff; i++) {
     let tds = columnNames[props.tableName].map((value, index) => { return <td key={index}></td> });
     rows.push(<tr key={rows.length + i}>{tds}</tr>);
   }
+
+  pagesTotalCount = Math.ceil(rowsTotalCount / rowsMaxCounts[props.tableName]);
+  countInfo =
+    <div>
+      {rowsCount} / {rowsTotalCount}
+    </div>
+  
+  let pageCount = pageCounts[props.tableName];
+  let base = Math.floor((currentPageNo - 1)/ pageCount);
+  for (let i = base * pageCount + 1; i <= (base + 1) * pageCount; i++) {
+    let page = <div key={i} style={{margin:"0px 10px", padding:"3px", border: "1px solid black"}}>{i}</div>
+    pages.push(page);
+  }
+
+  console.log(pages);
 
   return (
     <>
       <div className="table-title">{props.tableName.toUpperCase()}</div>
       <div className="table-buttons">
+        <div>{countInfo}</div>
         <ul>
           <li>
             <div>
@@ -122,15 +159,20 @@ function Table(props) {
               <button onClick={() => {
                 document.body.style.cursor = "wait";
 
-                if (list !== null) {
-                  saveExcel(list, props.tableName)
-                  .then(() => {
-                    console.log("file saved!");
-                  })
-                  .catch((err) => {
+                axios.get(`http://${serverAddress}/read?table=${props.tableName}&count=-1`)
+                  .then((response) => {
+                    if (response.data.length > 0) {
+                      saveExcel(response.data, props.tableName)
+                        .then(() => {
+                          console.log("file saved!");
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                    }
+                  }).catch((err) => {
                     console.log(err);
                   });
-                }
 
                 document.body.style.cursor = "default";
               }}>Download</button>
@@ -153,6 +195,9 @@ function Table(props) {
             {rows}
           </tbody>
         </table>
+      </div>
+      <div className="paging">
+        {pages}
       </div>
     </>
   );

@@ -47,7 +47,7 @@ button {
   height: 50px;
   display: flex;
   align-items: center;
-  justify-content:right;
+  justify-content: space-between;
 }
 
 .table-buttons > ul {
@@ -79,14 +79,6 @@ td {
   height:18px;
 }
 
-.label-button {
-  display: inline-block;
-  font-size: inherit;
-  line-height: normal;
-  vertical-align: middle;
-  cursor: pointer;
-}
-
 input[type="file"] {
   position: absolute;
   width: 0;
@@ -98,9 +90,6 @@ input[type="file"] {
   border: 0;
   display: none;
 }
-
-
-
 
 .grid-container {
   display: grid;
@@ -139,4 +128,11 @@ input[type="file"] {
 .cell-d {
   grid-column: 3;
   grid-row: 2;
+}
+
+.paging {
+  /* background-color: red; */
+  display: flex;
+  justify-content: center;
+  margin: 15px 0px;
 }

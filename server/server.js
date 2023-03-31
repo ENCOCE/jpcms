@@ -28,26 +28,48 @@ exp.listen(port, () => {
 
 exp.use(express.json({limit:'10MB'}));
 
-exp.get("/read", (request, response) => {
-    response.header("Access-Control-Allow-Origin", "*");
+exp.get("/count", (request, response) => {
+    // response.header("Access-Control-Allow-Origin", "*");
 
     (async () => {
         let conn, result;
         try {
             conn = await pool.getConnection();
-            result = await conn.query(`SELECT * FROM ${request.query.table} LIMIT ${request.query.count}`);
+            result = await conn.query(`SELECT COUNT(*) FROM ${request.query.table}`);
         } catch (err) {
             result = err;
         } finally {
             conn.release();
 
-            response.send(result);
+            response.send(result[0]['COUNT(*)'].toString());
+        }
+    })();
+});
+
+exp.get("/read", (request, response) => {
+    // response.header("Access-Control-Allow-Origin", "*");
+
+    (async () => {
+        let conn, result;
+        let limit = (request.query.count === '-1') ? `` : ` LIMIT ${request.query.offset}, ${request.query.count}`;
+
+        try {
+            conn = await pool.getConnection();
+            result = await conn.query(`SELECT * FROM ${request.query.table}` + limit);
+        } catch (err) {
+            result = err;
+        } finally {
+            conn.release();
+
+            response.send(JSON.stringify(result, (key, value) => {
+                return typeof value === 'bigint' ? value.toString() : value;
+            }));
         }
     })();
 });
 
 exp.post("/insert", (request, response) => {
-    response.header("Access-Control-Allow-Origin", "*");
+    // response.header("Access-Control-Allow-Origin", "*");
     
     (async () => {
         let conn, result;
@@ -73,7 +95,7 @@ exp.post("/insert", (request, response) => {
 });
 
 exp.delete("/delete-all", (request, response) => {
-    response.header("Access-Control-Allow-Origin", "*");
+    // response.header("Access-Control-Allow-Origin", "*");
 
     (async () => {
         let conn, result;
