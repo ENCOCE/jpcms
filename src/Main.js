@@ -30,7 +30,8 @@ function Table(props) {
   let [rowsTotalCount, setRowsTotalCount] = useState(0);
   let rowsCount = 0;  
   let pagesTotalCount = 0;
-  let currentPageNo = 1;
+  let [currentPageNo, setCurrentPageNo] = useState(1);
+  let pageInfo = null;
 
   const columnNames = {
     company: ["NUMBER", "NAME", "TYPE", "ITEM", "KEY", "DATE", "NOTE"],
@@ -38,8 +39,8 @@ function Table(props) {
     mri: ["NUMBER", "MRI"],
     keyword: ["KEYWORD", "KEY"]
   };
-  const rowsMaxCounts = { company: 29, business: 11, mri: 11, keyword: 11 };
-  const pageCounts = { company: 20, business: 10, mri: 5, keyword: 5 };
+  const rowsMaxCounts = { company: 30, business: 12, mri: 12, keyword: 12 };
+  const pageCounts = { company: 5, business: 3, mri: 3, keyword: 3 };
 
   const uploadRef = useRef();
   const insertRef = useRef();
@@ -114,23 +115,33 @@ function Table(props) {
 
   pagesTotalCount = Math.ceil(rowsTotalCount / rowsMaxCounts[props.tableName]);
   countInfo =
-    <div>
-      {rowsCount} / {rowsTotalCount}
+    <div style={{margin:"0px 10px"}}>
+      {rowsTotalCount} [ea]
     </div>
   
   let pageCount = pageCounts[props.tableName];
-  let base = Math.floor((currentPageNo - 1)/ pageCount);
-  for (let i = base * pageCount + 1; i <= (base + 1) * pageCount; i++) {
-    let page = <div key={i} style={{margin:"0px 10px", padding:"3px", border: "1px solid black"}}>{i}</div>
+  let base = Math.floor((currentPageNo - 1) / pageCount);
+  let start = base * pageCount + 1;
+  let end = (currentPageNo > Math.floor(pagesTotalCount / pageCount) * pageCount)
+            ? Math.floor(pagesTotalCount / pageCount) * pageCount + pagesTotalCount % pageCount
+            :(base + 1) * pageCount;
+  for (let i = start; i <= end; i++) {
+    let page = <Page key={i} pageNo={i} nowPageNo={currentPageNo} onPage={(newPageNo) => {
+      setCurrentPageNo(newPageNo);
+      setList(0);   // 검토 필요 
+    }}/>
     pages.push(page);
   }
 
-  console.log(pages);
+  pageInfo =
+    <div style={{fontSize: "0.8em", margin:"0px 10px"}}>
+      total : {pagesTotalCount} [pages]
+    </div>
 
   return (
     <>
       <div className="table-title">{props.tableName.toUpperCase()}</div>
-      <div className="table-buttons">
+      <div className="table-header">
         <div>{countInfo}</div>
         <ul>
           <li>
@@ -196,8 +207,19 @@ function Table(props) {
           </tbody>
         </table>
       </div>
-      <div className="paging">
-        {pages}
+      <div className="table-footer">
+        <div className="pages">
+          <button disabled={currentPageNo <= pageCounts[props.tableName]} onClick={() => {
+            setCurrentPageNo(end - pageCount);
+            setList(0);
+          }}>&lt;</button>
+          {pages}
+          <button disabled={currentPageNo > Math.floor(pagesTotalCount / pageCount) * pageCount} onClick={() => {
+            setCurrentPageNo(start + pageCount);
+            setList(0);
+          }}>&gt;</button>
+        </div>
+        <div style={{textAlign: "right", margin: "-31px 0px"}}>{pageInfo}</div>
       </div>
     </>
   );
@@ -217,4 +239,24 @@ async function saveExcel(jsonData, fileName) {
   const worksheet = XLSX.utils.json_to_sheet(jsonData);
   XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
   await XLSX.writeFile(workbook, fileName + ".xlsx");
+}
+
+function Page(props) {
+  let pageNo = props.pageNo;
+  let isCurrentPage = (props.pageNo === props.nowPageNo);
+  // let styleColor = isCurrentPage ? "rgb(128, 128, 128)" : "rgb(0, 0, 0)";
+  // let styleFontWeight = isCurrentPage ? "bold" : "normal";
+  let styleBorder = isCurrentPage ? "1px solid blue" : "none";
+  let styleCorlor = isCurrentPage ? "default" : "pointer";
+  // let styleTextDecoration = isCurrentPage ? "underline" : "none";
+
+  return (    
+    <div key={pageNo}
+      style={{ margin: "0px 0 px", padding: "3px 5px", border: styleBorder, cursor: styleCorlor }}
+      onClick={() => {
+        if (!isCurrentPage) {
+          props.onPage(pageNo);
+        }
+      }}>{pageNo}</div>
+  );
 }

@@ -30,7 +30,7 @@
 
 button {
   padding: 3px 5px;
-  margin: 0px 10px 0px 0px;
+  margin: 0px 5px 0px 5px;
 }
 
 .table-title {
@@ -43,30 +43,36 @@ button {
   padding: 0px 10px;
 }
 
-.table-buttons {
-  height: 50px;
+.table-header {
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.table-buttons > ul {
+.table-header > ul {
   list-style-type: none;
 }
 
-.table-buttons > ul > li {
+.table-header > ul > li {
   display: inline-block;
+}
+
+.table-footer {
+  height: 45px;
 }
 
 table {
   border: 0px solid black;
   width: 100%;
   font-size: 0.8em;
+  /* border-spacing: 1px; */
+  table-layout: fixed;
 }
 
 th {
   border: 0px solid black;
-  background: black;
+  background: darkslategray;
   color: white;
   text-align: center;
 }
@@ -76,7 +82,10 @@ td {
   background: white;
   color: black;
   text-align: left;
-  height:18px;
+  height: 18.1px;
+
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 input[type="file"] {
@@ -130,9 +139,9 @@ input[type="file"] {
   grid-row: 2;
 }
 
-.paging {
-  /* background-color: red; */
+.pages {
   display: flex;
   justify-content: center;
-  margin: 15px 0px;
+  font-size: 0.9em;
+  margin: 8px 0px;
 }
