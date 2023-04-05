@@ -1,3 +1,4 @@
+import styles from './Cms.module.css';
 import { useRef, useState } from "react";
 import axios from "axios";
 import * as XLSX from 'xlsx';
@@ -7,11 +8,11 @@ const serverAddress = "10.200.140.149:3001";
 export default function Main() {
   return (
     <>
-      <div className="grid-container">
-        <div className="grid-cell cell-a"><Table tableName="company" /></div>
-        <div className="grid-cell cell-b"><Table tableName="business" /></div>
-        <div className="grid-cell cell-c"><Table tableName="mri" /></div>
-        <div className="grid-cell cell-d"><Table tableName="keyword" /></div>
+      <div className={styles.grid_container}>
+        <div className={[styles.grid_cell, styles.cell_a].join(' ')}><Table tableName="company" /></div>
+        <div className={[styles.grid_cell, styles.cell_b].join(' ')}><Table tableName="business" /></div>
+        <div className={[styles.grid_cell, styles.cell_c].join(' ')}><Table tableName="mri" /></div>
+        <div className={[styles.grid_cell, styles.cell_d].join(' ')}><Table tableName="keyword" /></div>
       </div>
     </>
   );
@@ -138,8 +139,8 @@ function Table(props) {
 
   return (
     <>
-      <div className="table-title">{props.tableName.toUpperCase()}</div>
-      <div className="table-header">
+      <div className={styles.table_title}>{props.tableName.toUpperCase()}</div>
+      <div className={styles.table_header}>
         <div>{countInfo}</div>
         <ul>
           <li>
@@ -205,8 +206,8 @@ function Table(props) {
           </tbody>
         </table>
       </div>
-      <div className="table-footer">
-        <div className="pages">
+      <div className={styles.table_footer}>
+        <div className={styles.pages}>
           <button disabled={currentPageNo <= pageCounts[props.tableName]} onClick={() => {
             setCurrentPageNo(end - pageCount);
             setList(0);

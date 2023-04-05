@@ -1,3 +1,4 @@
+import styles from './Cms.module.css';
 import { Link } from "react-router-dom";
 
 export default function Header() {
@@ -7,8 +8,8 @@ export default function Header() {
 
     return (
         <>
-            <div className="header">
-                <Link className="link-home" to='/'>
+            <div className={styles.header}>
+                <Link className={styles.link} to='/'>
                     <h1>로고</h1>
                 </Link>
                 <ul>

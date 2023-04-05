@@ -5,11 +5,11 @@
     height: 100vh;
 }
 
-.link-home {
+.link {
     color: white;
     text-decoration: none;
 }
 
-.link-home:hover {
+.link:hover {
     color: blue;
 }

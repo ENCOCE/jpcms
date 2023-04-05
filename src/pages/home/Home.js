@@ -1,12 +1,12 @@
+import styles from './Home.module.css';
 import { Link } from 'react-router-dom';
-import './Home.css';
 
 export default function Home() {
     return (
-        <div className='Home'>
+        <div className={styles.Home}>
             <nav>
-                <Link className='link-work' to='/cms'>CMS</Link>
-                <Link className='link-work' to='/was'>WAS</Link>
+                <Link className={styles.link} to='/cms'>CMS</Link>
+                <Link className={styles.link} to='/was'>WAS</Link>
             </nav>
         </div>
     );
