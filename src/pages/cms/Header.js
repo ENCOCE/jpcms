@@ -1,6 +1,6 @@
-export default Header;
+import { Link } from "react-router-dom";
 
-function Header(props) {
+export default function Header() {
     function refreshPage() {
         window.location.reload(false);
     }
@@ -8,7 +8,9 @@ function Header(props) {
     return (
         <>
             <div className="header">
-                <h1>로고</h1>
+                <Link className="link-home" to='/'>
+                    <h1>로고</h1>
+                </Link>
                 <ul>
                     <li><button onClick={refreshPage}>Refresh DB</button></li>
                 </ul>

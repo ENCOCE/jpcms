@@ -1,0 +1,15 @@
+.Was {
+    background: black;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.link-home {
+    color: white;
+    text-decoration: none;
+}
+
+.link-home:hover {
+    color: blue;
+}

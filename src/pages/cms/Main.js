@@ -2,11 +2,9 @@ import { useRef, useState } from "react";
 import axios from "axios";
 import * as XLSX from 'xlsx';
 
-export default Main;
-
 const serverAddress = "10.200.140.149:3001";
 
-function Main(props) {
+export default function Main() {
   return (
     <>
       <div className="grid-container">

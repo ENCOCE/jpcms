@@ -1,0 +1,19 @@
+.Home {
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.link-work {
+    color: white;
+    font-size: 5em;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 0px 100px;
+}
+
+.link-work:hover {
+    color: blue;
+}

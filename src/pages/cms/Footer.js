@@ -1,6 +1,4 @@
-export default Footer;
-
-function Footer(props) {
+export default function Footer() {
     return (
         <>
             <div className="footer">
